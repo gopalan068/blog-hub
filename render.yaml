@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: blog-hub
+    env: python
+    pythonVersion: 3.11
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        sync: false
+      - key: SQLALCHEMY_DATABASE_URI
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+
+databases:
+  - name: blog-db
+    databaseName: blogdb
+    user: bloguser
+    region: oregon

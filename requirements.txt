@@ -6,3 +6,6 @@ Flask-SQLAlchemy
 Flask-WTF
 Pillow
 WTForms
+gunicorn
+python-dotenv
+psycopg2-binary
