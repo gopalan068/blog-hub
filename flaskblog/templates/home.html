@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if posts.items %}
+        {% for post in posts.items %}
+            <article class="article-card">
+                <div class="card-body">
+                    <div class="d-flex mb-3">
+                        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}" alt="{{ post.author.username }}">
+                        <div class="flex-grow-1">
+                            <div class="article-metadata">
+                                <a href="{{ url_for('users.user_posts', username=post.author.username) }}" class="text-decoration-none">
+                                    <strong>{{ post.author.username }}</strong>
+                                </a>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar3"></i> {{ post.date_posted.strftime('%B %d, %Y') }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <h2><a class="article-title text-decoration-none" href="{{ url_for('posts.post', post_id=post.id) }}">{{ post.title }}</a></h2>
+                    <p class="article-content text-secondary">{{ post.content[:200] }}{% if post.content|length > 200 %}<strong>...</strong>{% endif %}</p>
+                    <a href="{{ url_for('posts.post', post_id=post.id) }}" class="btn btn-sm btn-primary">
+                        Read More <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </article>
+        {% endfor %}
+        
+        <!-- Pagination -->
+        <nav aria-label="Page navigation" class="my-4">
+            <ul class="pagination justify-content-center">
+                {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if posts.page == page_num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ page_num }}</span>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+    {% else %}
+        <div class="alert alert-info text-center mt-5">
+            <i class="bi bi-info-circle"></i>
+            <p class="mb-0">No posts yet. <a href="{{ url_for('users.register') }}">Register</a> to create your first post!</p>
+        </div>
+    {% endif %}
+{% endblock content %}
